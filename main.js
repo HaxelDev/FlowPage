@@ -3,8 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
-const hostname = 'http://127.0.0.1';
-const port = 3000;
+const hostname = '0.0.0.0';
+const port = process.env.PORT || 3000;
 
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url);
