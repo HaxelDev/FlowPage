@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowScript</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>FlowScript</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h2>Welcome to FlowScript</h2>
+                <p>A scripting language for fast and flexible programming.</p>
+                <a href="about.html" class="btn">Learn More</a>
+            </div>
+        </section>
+
+        <section class="install">
+            <div class="container">
+                <div class="install-info">
+                    <h2>Install FlowScript</h2>
+                    <p>Get started with FlowScript by installing it on your system.</p>
+                    <form method="get" action="installer/FlowScriptInstaller.exe">
+                        <button class="btn-secondary">Install</button>
+                    </form>
+                </div>
+                <div class="flow-logo">
+                    <img src="images/flow-logo.png" alt="FlowScript Logo">
+                </div>
+            </div>
+        </section>
+
+        <section class="code-editor">
+            <div class="container">
+                <div class="editor-content">
+                    <h2>Test Your Code</h2>
+                    <p>Use the integrated code editor to test and run FlowScript code snippets directly in your browser.</p>
+                    <div class="editor">
+                        <textarea id="code" placeholder="Type your FlowScript code here..."></textarea>
+                        <button class="btn-run">Run Code</button>
+                    </div>
+                    <div id="output"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 FlowScript. All rights reserved. | <a href="https://github.com/HaxelDev/FlowScript" target="_blank">GitHub</a></p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
