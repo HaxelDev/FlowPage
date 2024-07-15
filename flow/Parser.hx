@@ -176,14 +176,23 @@ class Parser {
     
         consume(TokenType.IN, "Expected 'in' after identifier");
     
-        var iterableExpression:Expression = parseExpression();
+        var iterableExpression:Expression;
+
+        if (match([TokenType.RANGE])) {
+            consume(TokenType.LPAREN, "Expected '(' after 'range'");
+            var startExpr:Expression = parseExpression();
+            if (match([TokenType.COMMA])) {
+                // Consume comma
+            }
+            var endExpr:Expression = parseExpression();
+            consume(TokenType.RPAREN, "Expected ')' after range expression");
     
-        var body:Statement;
-        if (check(TokenType.LBRACE)) {
-            body = parseBlock();
+            iterableExpression = new RangeExpression(startExpr, endExpr);
         } else {
-            body = parseStatement();
+            iterableExpression = parseExpression();
         }
+
+        var body:Statement = parseBlock();
     
         return new ForStatement(variableName, iterableExpression, body);
     }
@@ -461,21 +470,45 @@ class Parser {
     }
 
     private function parseExpression():Expression {
-        return parseEquality();
+        return parseLogicalAnd();
     }
 
+    private function parseLogicalAnd():Expression {
+        var expr = parseEquality();
+    
+        while (match([TokenType.AND])) {
+            var opera = previous().value;
+            var right = parseEquality();
+            expr = new BinaryExpression(expr, opera, right);
+        }
+    
+        return expr;
+    }
+    
+    private function parseLogicalOr():Expression {
+        var expr = parseLogicalAnd();
+    
+        while (match([TokenType.OR])) {
+            var opera = previous().value;
+            var right = parseLogicalAnd();
+            expr = new BinaryExpression(expr, opera, right);
+        }
+    
+        return expr;
+    }
+    
     private function parseEquality():Expression {
         var expr = parseComparison();
-
+    
         while (match([TokenType.EQUAL_EQUAL, TokenType.BANG_EQUAL])) {
             var opera = previous().value;
             var right = parseComparison();
             expr = new BinaryExpression(expr, opera, right);
         }
-
+    
         return expr;
     }
-
+    
     private function parseComparison(): Expression {
         var expr: Expression = parseTerm();
         while (match([TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL])) {
@@ -488,7 +521,7 @@ class Parser {
     
     private function parseTerm(): Expression {
         var expr: Expression = parseFactor();
-        while (match([TokenType.PLUS, TokenType.MINUS, TokenType.MULTIPLY, TokenType.DIVIDE, TokenType.BITWISE_AND, TokenType.BITWISE_OR, TokenType.BITWISE_XOR])) {
+        while (match([TokenType.PLUS, TokenType.MINUS, TokenType.MULTIPLY, TokenType.DIVIDE])) {
             var opera: String = previous().value;
             var right: Expression = parseFactor();
             expr = new BinaryExpression(expr, opera, right);
@@ -500,9 +533,9 @@ class Parser {
         if (match([TokenType.NUMBER])) {
             var value:String = previous().value;
             if (value.indexOf(".") != -1) {
-              return new LiteralExpression(Std.parseFloat(value));
+                return new LiteralExpression(Std.parseFloat(value));
             } else {
-              return new LiteralExpression(Std.parseInt(value));
+                return new LiteralExpression(Std.parseInt(value));
             }
         } else if (match([TokenType.STRING])) {
             return new LiteralExpression(previous().value);
@@ -529,6 +562,8 @@ class Parser {
         } else if (match([TokenType.IDENTIFIER])) {
             if (peek().type == TokenType.LPAREN) {
                 return parseCallExpression();
+            } else if (peek().type == TokenType.LBRACKET) {
+                return parseArrayAccess();
             } else {
                 return parsePropertyAccess();
             }
@@ -698,6 +733,14 @@ class Parser {
             obj = new PropertyAccessExpression(obj, property.value);
         }
         return obj;
+    }
+
+    private function parseArrayAccess():Expression {
+        var expr:Expression = new VariableExpression(previous().value);
+        consume(TokenType.LBRACKET, "Expected '[' after array name");
+        var index:Expression = parseExpression();
+        consume(TokenType.RBRACKET, "Expected ']' after array index");
+        return new ArrayAccessExpression(expr, index);
     }
 
     private function advance():Token {

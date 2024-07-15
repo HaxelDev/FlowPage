@@ -862,10 +862,6 @@ flow_Lexer.getToken = function(token) {
 	switch(token) {
 	case "!=":
 		return new flow_Token(flow_TokenType.BANG_EQUAL,token);
-	case "&":
-		return new flow_Token(flow_TokenType.BITWISE_AND,token);
-	case "&&":
-		return new flow_Token(flow_TokenType.AND,token);
 	case "*":
 		return new flow_Token(flow_TokenType.MULTIPLY,token);
 	case "/":
@@ -898,8 +894,8 @@ flow_Lexer.getToken = function(token) {
 		return new flow_Token(flow_TokenType.RANDOM,token);
 	case "System":
 		return new flow_Token(flow_TokenType.SYSTEM,token);
-	case "^":
-		return new flow_Token(flow_TokenType.BITWISE_XOR,token);
+	case "and":
+		return new flow_Token(flow_TokenType.AND,token);
 	case "call":
 		return new flow_Token(flow_TokenType.KEYWORD,token);
 	case "else":
@@ -916,18 +912,18 @@ flow_Lexer.getToken = function(token) {
 		return new flow_Token(flow_TokenType.IN,token);
 	case "let":
 		return new flow_Token(flow_TokenType.KEYWORD,token);
+	case "or":
+		return new flow_Token(flow_TokenType.OR,token);
 	case "print":
 		return new flow_Token(flow_TokenType.KEYWORD,token);
+	case "range":
+		return new flow_Token(flow_TokenType.RANGE,token);
 	case "return":
 		return new flow_Token(flow_TokenType.KEYWORD,token);
 	case "true":
 		return new flow_Token(flow_TokenType.TRUE,token);
 	case "while":
 		return new flow_Token(flow_TokenType.KEYWORD,token);
-	case "|":
-		return new flow_Token(flow_TokenType.BITWISE_OR,token);
-	case "||":
-		return new flow_Token(flow_TokenType.OR,token);
 	default:
 		if(flow_Lexer.isNumeric(token)) {
 			return new flow_Token(flow_TokenType.NUMBER,token);
@@ -1042,18 +1038,16 @@ var flow_TokenType = $hxEnums["flow.TokenType"] = { __ename__:true,__constructs_
 	,AND: {_hx_name:"AND",_hx_index:29,__enum__:"flow.TokenType",toString:$estr}
 	,OR: {_hx_name:"OR",_hx_index:30,__enum__:"flow.TokenType",toString:$estr}
 	,IN: {_hx_name:"IN",_hx_index:31,__enum__:"flow.TokenType",toString:$estr}
-	,BITWISE_AND: {_hx_name:"BITWISE_AND",_hx_index:32,__enum__:"flow.TokenType",toString:$estr}
-	,BITWISE_OR: {_hx_name:"BITWISE_OR",_hx_index:33,__enum__:"flow.TokenType",toString:$estr}
-	,BITWISE_XOR: {_hx_name:"BITWISE_XOR",_hx_index:34,__enum__:"flow.TokenType",toString:$estr}
-	,LEFT_SHIFT: {_hx_name:"LEFT_SHIFT",_hx_index:35,__enum__:"flow.TokenType",toString:$estr}
-	,RIGHT_SHIFT: {_hx_name:"RIGHT_SHIFT",_hx_index:36,__enum__:"flow.TokenType",toString:$estr}
-	,IO: {_hx_name:"IO",_hx_index:37,__enum__:"flow.TokenType",toString:$estr}
-	,RANDOM: {_hx_name:"RANDOM",_hx_index:38,__enum__:"flow.TokenType",toString:$estr}
-	,SYSTEM: {_hx_name:"SYSTEM",_hx_index:39,__enum__:"flow.TokenType",toString:$estr}
-	,FILE: {_hx_name:"FILE",_hx_index:40,__enum__:"flow.TokenType",toString:$estr}
-	,JSON: {_hx_name:"JSON",_hx_index:41,__enum__:"flow.TokenType",toString:$estr}
+	,RANGE: {_hx_name:"RANGE",_hx_index:32,__enum__:"flow.TokenType",toString:$estr}
+	,LEFT_SHIFT: {_hx_name:"LEFT_SHIFT",_hx_index:33,__enum__:"flow.TokenType",toString:$estr}
+	,RIGHT_SHIFT: {_hx_name:"RIGHT_SHIFT",_hx_index:34,__enum__:"flow.TokenType",toString:$estr}
+	,IO: {_hx_name:"IO",_hx_index:35,__enum__:"flow.TokenType",toString:$estr}
+	,RANDOM: {_hx_name:"RANDOM",_hx_index:36,__enum__:"flow.TokenType",toString:$estr}
+	,SYSTEM: {_hx_name:"SYSTEM",_hx_index:37,__enum__:"flow.TokenType",toString:$estr}
+	,FILE: {_hx_name:"FILE",_hx_index:38,__enum__:"flow.TokenType",toString:$estr}
+	,JSON: {_hx_name:"JSON",_hx_index:39,__enum__:"flow.TokenType",toString:$estr}
 };
-flow_TokenType.__constructs__ = [flow_TokenType.KEYWORD,flow_TokenType.SYMBOL,flow_TokenType.STRING,flow_TokenType.LPAREN,flow_TokenType.RPAREN,flow_TokenType.LBRACE,flow_TokenType.RBRACE,flow_TokenType.LBRACKET,flow_TokenType.RBRACKET,flow_TokenType.COMMA,flow_TokenType.DOT,flow_TokenType.COLON,flow_TokenType.PLUS,flow_TokenType.MINUS,flow_TokenType.MULTIPLY,flow_TokenType.DIVIDE,flow_TokenType.EQUAL,flow_TokenType.IDENTIFIER,flow_TokenType.NUMBER,flow_TokenType.BANG,flow_TokenType.EQUAL_EQUAL,flow_TokenType.BANG_EQUAL,flow_TokenType.GREATER,flow_TokenType.GREATER_EQUAL,flow_TokenType.LESS,flow_TokenType.LESS_EQUAL,flow_TokenType.SEMICOLON,flow_TokenType.TRUE,flow_TokenType.FALSE,flow_TokenType.AND,flow_TokenType.OR,flow_TokenType.IN,flow_TokenType.BITWISE_AND,flow_TokenType.BITWISE_OR,flow_TokenType.BITWISE_XOR,flow_TokenType.LEFT_SHIFT,flow_TokenType.RIGHT_SHIFT,flow_TokenType.IO,flow_TokenType.RANDOM,flow_TokenType.SYSTEM,flow_TokenType.FILE,flow_TokenType.JSON];
+flow_TokenType.__constructs__ = [flow_TokenType.KEYWORD,flow_TokenType.SYMBOL,flow_TokenType.STRING,flow_TokenType.LPAREN,flow_TokenType.RPAREN,flow_TokenType.LBRACE,flow_TokenType.RBRACE,flow_TokenType.LBRACKET,flow_TokenType.RBRACKET,flow_TokenType.COMMA,flow_TokenType.DOT,flow_TokenType.COLON,flow_TokenType.PLUS,flow_TokenType.MINUS,flow_TokenType.MULTIPLY,flow_TokenType.DIVIDE,flow_TokenType.EQUAL,flow_TokenType.IDENTIFIER,flow_TokenType.NUMBER,flow_TokenType.BANG,flow_TokenType.EQUAL_EQUAL,flow_TokenType.BANG_EQUAL,flow_TokenType.GREATER,flow_TokenType.GREATER_EQUAL,flow_TokenType.LESS,flow_TokenType.LESS_EQUAL,flow_TokenType.SEMICOLON,flow_TokenType.TRUE,flow_TokenType.FALSE,flow_TokenType.AND,flow_TokenType.OR,flow_TokenType.IN,flow_TokenType.RANGE,flow_TokenType.LEFT_SHIFT,flow_TokenType.RIGHT_SHIFT,flow_TokenType.IO,flow_TokenType.RANDOM,flow_TokenType.SYSTEM,flow_TokenType.FILE,flow_TokenType.JSON];
 var flow_Parser = function(tokens) {
 	this.tokens = tokens;
 	this.currentTokenIndex = 0;
@@ -1201,13 +1195,18 @@ flow_Parser.prototype = {
 		var variableToken = this.consume(flow_TokenType.IDENTIFIER,"Expected identifier after 'for'");
 		var variableName = variableToken.value;
 		this.consume(flow_TokenType.IN,"Expected 'in' after identifier");
-		var iterableExpression = this.parseExpression();
-		var body;
-		if(this.check(flow_TokenType.LBRACE)) {
-			body = this.parseBlock();
+		var iterableExpression;
+		if(this.match([flow_TokenType.RANGE])) {
+			this.consume(flow_TokenType.LPAREN,"Expected '(' after 'range'");
+			var startExpr = this.parseExpression();
+			var tmp = this.match([flow_TokenType.COMMA]);
+			var endExpr = this.parseExpression();
+			this.consume(flow_TokenType.RPAREN,"Expected ')' after range expression");
+			iterableExpression = new flow_RangeExpression(startExpr,endExpr);
 		} else {
-			body = this.parseStatement();
+			iterableExpression = this.parseExpression();
 		}
+		var body = this.parseBlock();
 		return new flow_ForStatement(variableName,iterableExpression,body);
 	}
 	,parseFuncStatement: function() {
@@ -1445,7 +1444,25 @@ flow_Parser.prototype = {
 		}
 	}
 	,parseExpression: function() {
-		return this.parseEquality();
+		return this.parseLogicalAnd();
+	}
+	,parseLogicalAnd: function() {
+		var expr = this.parseEquality();
+		while(this.match([flow_TokenType.AND])) {
+			var opera = this.previous().value;
+			var right = this.parseEquality();
+			expr = new flow_BinaryExpression(expr,opera,right);
+		}
+		return expr;
+	}
+	,parseLogicalOr: function() {
+		var expr = this.parseLogicalAnd();
+		while(this.match([flow_TokenType.OR])) {
+			var opera = this.previous().value;
+			var right = this.parseLogicalAnd();
+			expr = new flow_BinaryExpression(expr,opera,right);
+		}
+		return expr;
 	}
 	,parseEquality: function() {
 		var expr = this.parseComparison();
@@ -1467,7 +1484,7 @@ flow_Parser.prototype = {
 	}
 	,parseTerm: function() {
 		var expr = this.parseFactor();
-		while(this.match([flow_TokenType.PLUS,flow_TokenType.MINUS,flow_TokenType.MULTIPLY,flow_TokenType.DIVIDE,flow_TokenType.BITWISE_AND,flow_TokenType.BITWISE_OR,flow_TokenType.BITWISE_XOR])) {
+		while(this.match([flow_TokenType.PLUS,flow_TokenType.MINUS,flow_TokenType.MULTIPLY,flow_TokenType.DIVIDE])) {
 			var opera = this.previous().value;
 			var right = this.parseFactor();
 			expr = new flow_BinaryExpression(expr,opera,right);
@@ -1507,6 +1524,8 @@ flow_Parser.prototype = {
 		} else if(this.match([flow_TokenType.IDENTIFIER])) {
 			if(this.peek().type == flow_TokenType.LPAREN) {
 				return this.parseCallExpression();
+			} else if(this.peek().type == flow_TokenType.LBRACKET) {
+				return this.parseArrayAccess();
 			} else {
 				return this.parsePropertyAccess();
 			}
@@ -1661,6 +1680,13 @@ flow_Parser.prototype = {
 		}
 		return obj;
 	}
+	,parseArrayAccess: function() {
+		var expr = new flow_VariableExpression(this.previous().value);
+		this.consume(flow_TokenType.LBRACKET,"Expected '[' after array name");
+		var index = this.parseExpression();
+		this.consume(flow_TokenType.RBRACKET,"Expected ']' after array index");
+		return new flow_ArrayAccessExpression(expr,index);
+	}
 	,advance: function() {
 		this.currentTokenIndex++;
 		return this.previous();
@@ -1810,13 +1836,24 @@ flow_Environment.getFunction = function(name) {
 	}
 	return flow_Environment.functions.h[name];
 };
-flow_Environment.callFunction = function(name,$arguments) {
-	if(!Object.prototype.hasOwnProperty.call(flow_Environment.functions.h,name)) {
-		Flow.error.report("Undefined function: " + name);
+flow_Environment.callFunction = function(name,$arguments,context) {
+	var func;
+	if(context != null) {
+		func = Reflect.field(context,name);
+		if(func == null) {
+			Flow.error.report("Undefined method: " + name);
+			return;
+		}
+	} else {
+		func = flow_Environment.functions.h[name];
+		if(!Object.prototype.hasOwnProperty.call(flow_Environment.functions.h,name)) {
+			Flow.error.report("Undefined function: " + name);
+			return;
+		}
 	}
-	var func = flow_Environment.functions.h[name];
 	if(func.parameters.length != $arguments.length) {
 		Flow.error.report("Incorrect number of arguments for function: " + name);
+		return;
 	}
 	var oldValues = haxe_ds_StringMap.createCopy(flow_Environment.values.h);
 	var _g = 0;
@@ -1888,6 +1925,20 @@ flow_BinaryExpression.prototype = $extend(flow_Expression.prototype,{
 			return leftValue > rightValue;
 		case ">=":
 			return leftValue >= rightValue;
+		case "and":
+			if(leftValue != 0) {
+				return rightValue != 0;
+			} else {
+				return false;
+			}
+			break;
+		case "or":
+			if(leftValue == 0) {
+				return rightValue != 0;
+			} else {
+				return true;
+			}
+			break;
 		default:
 			Flow.error.report("Unknown operator: " + this.opera);
 			return null;
@@ -1989,19 +2040,55 @@ flow_ForStatement.__super__ = flow_Statement;
 flow_ForStatement.prototype = $extend(flow_Statement.prototype,{
 	execute: function() {
 		var iterable = this.iterableExpression.evaluate();
-		if(iterable != null) {
-			var item = $getIterator(iterable);
-			while(item.hasNext()) {
-				var item1 = item.next();
-				flow_Environment.define(this.variableName,item1);
-				this.body.execute();
-			}
-		} else {
+		if(iterable == null) {
 			Flow.error.report("Iterable expression evaluates to null");
+			return;
+		}
+		var item = $getIterator(iterable);
+		while(item.hasNext()) {
+			var item1 = item.next();
+			flow_Environment.define(this.variableName,item1);
+			this.body.execute();
 		}
 	}
 	,__class__: flow_ForStatement
 });
+var flow_RangeExpression = function(start,end) {
+	this.start = start;
+	this.end = end;
+};
+flow_RangeExpression.__name__ = true;
+flow_RangeExpression.__super__ = flow_Expression;
+flow_RangeExpression.prototype = $extend(flow_Expression.prototype,{
+	evaluate: function() {
+		var startValue = this.start.evaluate();
+		var endValue = this.end.evaluate();
+		if(!(typeof(startValue) == "number" && ((startValue | 0) === startValue)) || !(typeof(endValue) == "number" && ((endValue | 0) === endValue))) {
+			Flow.error.report("Range start or end value is not a valid integer");
+			return null;
+		}
+		return new flow_RangeIterable(js_Boot.__cast(startValue , Int),js_Boot.__cast(endValue , Int));
+	}
+	,__class__: flow_RangeExpression
+});
+var flow_RangeIterable = function(start,end) {
+	this.start = start;
+	this.end = end;
+};
+flow_RangeIterable.__name__ = true;
+flow_RangeIterable.prototype = {
+	iterator: function() {
+		var _gthis = this;
+		var current = this.start;
+		return { hasNext : function() {
+			return current <= _gthis.end;
+		}, next : function() {
+			current += 1;
+			return current - 1;
+		}};
+	}
+	,__class__: flow_RangeIterable
+};
 var flow_ArrayLiteralExpression = function(elements) {
 	this.elements = elements;
 };
@@ -2077,13 +2164,13 @@ flow_Function.prototype = {
 		}
 		try {
 			this.body.execute();
-			flow_Environment.values = oldValues;
+			flow_Environment.values = haxe_ds_StringMap.createCopy(oldValues.h);
 			return null;
 		} catch( _g ) {
 			var _g1 = haxe_Exception.caught(_g);
 			if(((_g1) instanceof flow_ReturnValue)) {
 				var e = _g1;
-				flow_Environment.values = oldValues;
+				flow_Environment.values = haxe_ds_StringMap.createCopy(oldValues.h);
 				return e.value;
 			} else {
 				throw _g;
@@ -2227,6 +2314,28 @@ flow_PropertyAccessExpression.prototype = $extend(flow_Expression.prototype,{
 		}
 	}
 	,__class__: flow_PropertyAccessExpression
+});
+var flow_ArrayAccessExpression = function(array,index) {
+	this.array = array;
+	this.index = index;
+};
+flow_ArrayAccessExpression.__name__ = true;
+flow_ArrayAccessExpression.__super__ = flow_Expression;
+flow_ArrayAccessExpression.prototype = $extend(flow_Expression.prototype,{
+	evaluate: function() {
+		var arrayValue = this.array.evaluate();
+		var indexValue = this.index.evaluate();
+		if(arrayValue == null) {
+			Flow.error.report("Cannot access element of null array");
+			return null;
+		}
+		if(indexValue < 0 || indexValue >= arrayValue.length) {
+			Flow.error.report("Index out of bounds: " + indexValue);
+			return null;
+		}
+		return arrayValue[indexValue];
+	}
+	,__class__: flow_ArrayAccessExpression
 });
 var flow_IOExpression = function(methodName,$arguments) {
 	this.methodName = methodName;

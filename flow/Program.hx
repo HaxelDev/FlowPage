@@ -109,13 +109,24 @@ class Environment {
         return functions.get(name);
     }
 
-    static public function callFunction(name:String, arguments:Array<Dynamic>):Void {
-        if (!functions.exists(name)) {
-            Flow.error.report("Undefined function: " + name);
+    static public function callFunction(name:String, arguments:Array<Dynamic>, context:Dynamic = null):Void {
+        var func:Function;
+        if (context != null) {
+            func = Reflect.field(context, name);
+            if (func == null) {
+                Flow.error.report("Undefined method: " + name);
+                return;
+            }
+        } else {
+            func = functions.get(name);
+            if (!functions.exists(name)) {
+                Flow.error.report("Undefined function: " + name);
+                return;
+            }
         }
-        var func = functions.get(name);
         if (func.parameters.length != arguments.length) {
             Flow.error.report("Incorrect number of arguments for function: " + name);
+            return;
         }
         var oldValues:Map<String, Dynamic> = values.copy();
         for (i in 0...func.parameters.length) {
@@ -197,6 +208,10 @@ class BinaryExpression extends Expression {
                 return leftValue > rightValue;
             case ">=":
                 return leftValue >= rightValue;
+            case "and":
+                return (leftValue != 0) && (rightValue != 0);
+            case "or":
+                return (leftValue != 0) || (rightValue != 0);
             default:
                 Flow.error.report("Unknown operator: " + opera);
                 return null;
@@ -307,15 +322,61 @@ class ForStatement extends Statement {
 
     public override function execute(): Void {
         var iterable:Iterable<Dynamic> = iterableExpression.evaluate();
-    
-        if (iterable != null) {
-            for (item in iterable) {
-                Environment.define(variableName, item);
-                body.execute();
-            }
-        } else {
+
+        if (iterable == null) {
             Flow.error.report("Iterable expression evaluates to null");
+            return;
         }
+
+        for (item in iterable) {
+            Environment.define(variableName, item);
+            body.execute();
+        }
+    }
+}
+
+class RangeExpression extends Expression {
+    public var start:Expression;
+    public var end:Expression;
+
+    public function new(start:Expression, end:Expression) {
+        this.start = start;
+        this.end = end;
+    }
+
+    public override function evaluate():Iterable<Int> {
+        var startValue:Dynamic = start.evaluate();
+        var endValue:Dynamic = end.evaluate();
+
+        if (!Std.is(startValue, Int) || !Std.is(endValue, Int)) {
+            Flow.error.report("Range start or end value is not a valid integer");
+            return null;
+        }
+
+        return new RangeIterable(cast(startValue, Int), cast(endValue, Int));
+    }    
+}
+
+class RangeIterable {
+    public var start:Int;
+    public var end:Int;
+
+    public function new(start:Int, end:Int) {
+        this.start = start;
+        this.end = end;
+    }
+
+    public function iterator():Iterator<Int> {
+        var current:Int = start;
+
+        return {
+            hasNext: function():Bool {
+                return current <= end;
+            },
+            next: function():Int {
+                return current++;
+            }
+        };
     }
 }
 
@@ -394,10 +455,10 @@ class Function {
 
         try {
             body.execute();
-            Environment.values = oldValues;
+            Environment.values = oldValues.copy();
             return null;
         } catch (e:ReturnValue) {
-            Environment.values = oldValues;
+            Environment.values = oldValues.copy();
             return e.value;
         }
     }
@@ -486,6 +547,33 @@ class PropertyAccessExpression extends Expression {
             Flow.error.report("Property '" + property + "' does not exist on object");
             return null;
         }
+    }
+}
+
+class ArrayAccessExpression extends Expression {
+    public var array:Expression;
+    public var index:Expression;
+
+    public function new(array:Expression, index:Expression) {
+        this.array = array;
+        this.index = index;
+    }
+
+    public override function evaluate():Dynamic {
+        var arrayValue:Array<Dynamic> = array.evaluate();
+        var indexValue:Int = index.evaluate();
+
+        if (arrayValue == null) {
+            Flow.error.report("Cannot access element of null array");
+            return null;
+        }
+
+        if (indexValue < 0 || indexValue >= arrayValue.length) {
+            Flow.error.report("Index out of bounds: " + indexValue);
+            return null;
+        }
+
+        return arrayValue[indexValue];
     }
 }
 
