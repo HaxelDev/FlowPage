@@ -5,6 +5,8 @@ class Lexer {
         var tokens:Array<Token> = [];
         var currentToken:String = "";
         var inString:Bool = false;
+        var stringDelimiter:String = "";
+        var escapeSequence:Bool = false;
         var i:Int = 0;
 
         while (i < code.length) {
@@ -14,18 +16,30 @@ class Lexer {
                 if (inString) {
                     if (currentToken.length > 0 && currentToken.charAt(currentToken.length - 1) == '\\') {
                         currentToken = currentToken.substring(0, currentToken.length - 1) + char;
-                    } else {
+                        escapeSequence = true;
+                    } else if (char == stringDelimiter) {
                         tokens.push(new Token(TokenType.STRING, currentToken));
                         currentToken = "";
+                        inString = false;
+                        stringDelimiter = "";
+                    } else {
+                        currentToken += char;
                     }
-                    inString = false;
                 } else {
                     inString = true;
+                    stringDelimiter = char;
                 }
                 i++;
                 continue;
             } else if (inString) {
-                currentToken += char;
+                if (escapeSequence) {
+                    currentToken += char;
+                    escapeSequence = false;
+                } else if (char == '\\') {
+                    escapeSequence = true;
+                } else {
+                    currentToken += char;
+                }
                 i++;
                 continue;
             } else if (char == "/" && i + 1 < code.length && code.charAt(i + 1) == "/") {
@@ -41,17 +55,32 @@ class Lexer {
                 char == "[" || char == "]" || char == "," || char == ":" ||
                 char == "+" || char == "-" || char == "*" || char == "/" ||
                 char == "=" || char == ">" || char == "<" || char == ";" ||
-                char == "." || char == "!") {
+                char == "." || char == "!" || char == "%") {
                 if (currentToken.length > 0) {
                     tokens.push(getToken(currentToken));
                     currentToken = "";
                 }
                 var symbol:String = char;
                 if (char == "=") {
-                    if (i + 1 < code.length && (code.charAt(i + 1) == "=" || code.charAt(i + 1) == ">" || code.charAt(i + 1) == "<")) {
-                        symbol += code.charAt(i + 1);
-                        i++;
+                    if (i + 1 < code.length) {
+                        var nextChar:String = code.charAt(i + 1);
+                        if (nextChar == "=") {
+                            symbol += nextChar;
+                            i++;
+                        } else if (nextChar == ">" || nextChar == "<") {
+                            symbol += nextChar;
+                            i++;
+                        }
                     }
+                } else if (char == "!" && i + 1 < code.length && code.charAt(i + 1) == "=") {
+                    symbol += "=";
+                    i++;
+                } else if (char == ">" && i + 1 < code.length && code.charAt(i + 1) == "=") {
+                    symbol += "=";
+                    i++;
+                } else if (char == "<" && i + 1 < code.length && code.charAt(i + 1) == "=") {
+                    symbol += "=";
+                    i++;
                 }
                 tokens.push(new Token(getSymbolType(symbol), symbol));
             } else {
@@ -94,8 +123,18 @@ class Lexer {
                 return new Token(TokenType.KEYWORD, token);
             case "return":
                 return new Token(TokenType.KEYWORD, token);
+            case "break":
+                return new Token(TokenType.KEYWORD, token);
+            case "continue":
+                return new Token(TokenType.KEYWORD, token);
+            case "switch":
+                return new Token(TokenType.KEYWORD, token);
             case "in":
                 return new Token(TokenType.IN, token);
+            case "case":
+                return new Token(TokenType.CASE, token);
+            case "default":
+                return new Token(TokenType.DEFAULT, token);
             case "range":
                 return new Token(TokenType.RANGE, token);
             case "IO":
@@ -108,10 +147,14 @@ class Lexer {
                 return new Token(TokenType.FILE, token);
             case "Json":
                 return new Token(TokenType.JSON, token);
+            case "Math":
+                return new Token(TokenType.MATH, token);
             case "and":
                 return new Token(TokenType.AND, token);
             case "or":
                 return new Token(TokenType.OR, token);
+            case "%":
+                return new Token(TokenType.MODULO, token);
             case "<<":
                 return new Token(TokenType.LEFT_SHIFT, token);
             case ">>":
@@ -134,8 +177,12 @@ class Lexer {
                 return new Token(TokenType.MULTIPLY, token);
             case "/":
                 return new Token(TokenType.DIVIDE, token);
+            case ":":
+                return new Token(TokenType.COLON, token);
             case ";":
                 return new Token(TokenType.SEMICOLON, token);
+            case "!":
+                return new Token(TokenType.BANG, token);
             default:
                 if (isNumeric(token)) {
                     return new Token(TokenType.NUMBER, token);
@@ -187,6 +234,8 @@ class Lexer {
                 return TokenType.LESS_EQUAL;
             case ";":
                 return TokenType.SEMICOLON;
+            case "%":
+                return TokenType.MODULO;
             default:
                 return TokenType.SYMBOL;
         }
@@ -245,6 +294,7 @@ enum TokenType {
     AND;
     OR;
     IN;
+    MODULO;
     RANGE;
     LEFT_SHIFT;
     RIGHT_SHIFT;
@@ -253,4 +303,7 @@ enum TokenType {
     SYSTEM;
     FILE;
     JSON;
+    MATH;
+    DEFAULT;
+    CASE;
 }
