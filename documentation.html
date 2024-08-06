@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation | FlowScript</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>FlowScript</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="documentation.html" class="active">Documentation</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section class="documentation">
+            <div class="container">
+                <h1>FlowScript Documentation</h1>
+                <p>Welcome to the FlowScript documentation. Below you'll find information on the syntax, functions, and usage of FlowScript.</p>
+                <p><strong>Note:</strong> This documentation is currently a work in progress (WIP) and contains example code only. Detailed documentation will be available soon.</p>
+
+                <h2>Basic Syntax</h2>
+                <p>FlowScript is designed to be a simple and intuitive scripting language. Here are some basic elements:</p>
+                
+                <ul>
+                    <li><strong>Variables:</strong> Define variables using <code>let</code>.</li>
+                    <li><strong>Functions:</strong> Define functions using <code>func</code>.</li>
+                    <li><strong>Control Structures:</strong> Includes <code>if</code>, <code>while</code>, and <code>for</code> loops.</li>
+                </ul>
+
+                <h2>Variables</h2>
+                <p>Variables are declared using <code>let</code>. Example:</p>
+                <pre><code>let x = 5</code></pre>
+
+                <h2>Functions</h2>
+                <p>Functions are declared using <code>func</code>. Example:</p>
+                <pre><code>func add(a, b) {
+    return a + b
+}
+print(add(5, 3))</code></pre>
+
+                <h2>Control Structures</h2>
+                <p>FlowScript supports standard control structures. Examples:</p>
+                
+                <h3>Conditional Statements</h3>
+                <br>
+                <pre><code>if x > 0 {
+    print("Positive")
+} else {
+    print("Non-positive")
+}</code></pre>
+                <h2>Loops</h2>
+                <p><strong>For Loop:</strong></p>
+                <pre><code>for i in range(0, 5) {
+    print(i)
+}</code></pre>
+                <br>
+                <p><strong>While Loop:</strong></p>
+                <pre><code>let i = 0
+while i < 5 {
+    print(i)
+    i = i + 1
+}</code></pre>
+
+<h2>Examples</h2>
+<h3>Rock, Paper, Scissors Game</h3>
+<p>An example of a simple game implemented in FlowScript:</p>
+<pre><code>func main() {
+    print("Welcome to Rock, Paper, Scissors!")
+    
+    let playerChoice = getPlayerChoice()
+    print(getChoiceName(playerChoice))
+
+    let choices = [0, 1, 2]
+    let random = Random().nextInt(0, 2)
+    let computerChoice = choices[random]
+    print(getChoiceName(computerChoice))
+
+    if playerChoice == computerChoice {
+        System().println("It's a tie!")
+    } else if playerChoice == 1 and computerChoice == 2 {
+        System().println("You win!")
+    } else if playerChoice == 0 and computerChoice == 1 {
+        System().println("You win!")
+    } else if playerChoice == 2 and computerChoice == 0 {
+        System().println("You win!")
+    } else {
+        System().println("Computer wins!")
+    }
+}
+                
+func getPlayerChoice() {
+    while true {
+        print("Choose one of the options: 0 - paper, 1 - rock, 2 - scissors")
+        let choice = IO().readLine(">>> ")
+        if choice == 0 {
+            return choice
+        } else if choice == 1 {
+            return choice
+        } else if choice == 2 {
+            return choice
+        } else {
+            print("Invalid choice. Try again.")
+        }
+    }
+}
+
+func getChoiceName(choice) {
+    if choice == 0 {
+        return "paper"
+    } else if choice == 1 {
+        return "rock"
+    } else {
+        return "scissors"
+    }
+}
+                
+call main()</code></pre>
+
+                <h2>Math Functions</h2>
+                <p>FlowScript provides several mathematical functions:</p>
+                <pre><code>let x = 2.5
+
+print(Math().abs(x))    // Absolute value
+print(Math().sqrt(x))   // Square root
+print(Math().pow(x, 3)) // Power
+print(Math().sin(x))    // Sine
+print(Math().cos(x))    // Cosine
+print(Math().tan(x))    // Tangent
+print(Math().getPI())   // Value of PI</code></pre>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 FlowScript. All rights reserved. | <a href="https://github.com/HaxelDev/FlowScript" target="_blank">GitHub</a></p>
+        </div>
+    </footer>
+</body>
+</html>
